@@ -1,3 +1,13 @@
+const Part=(props)=>{
+  return(
+    <p>
+    {props.name}{props.e}
+    </p>
+  )
+}
+
+
+
 const App=()=>{
   const course='Half stack application devlopment'
 
@@ -13,9 +23,9 @@ const App=()=>{
   return(
     <div>
       <h1>{course}</h1>
-      <p>{part1} {e1}</p>
-      <p>{part2} {e2}</p>
-      <p>{part3} {e3}</p>
+      <Part name={part1} e={e1}/>
+      <Part name={part2} e={e2}/>
+      <Part name={part3} e={e3}/>
       <p>Number of exercises: {e1+e2+e3}</p>
     </div>
   )
