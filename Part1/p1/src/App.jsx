@@ -1,12 +1,28 @@
 import { useState } from 'react'
 
+const StatisticLine=(props)=>{
+  return(
+    <p>
+      {props.text} {props.value}
+    </p>
+  )
+}
+
 const Statistics=(props)=>{
   return(
     <div>
-      <p>all {props.total}</p>
-      <p>average {props.average}</p>
-      <p>positive {props.positive}</p>
+      <StatisticLine text="All" value={props.total}/>
+      <StatisticLine text="Average" value={props.average}/>
+      <StatisticLine text="Positive" value={props.positive + ' %'}/>
     </div>
+  )
+}
+
+const Button=(props)=>{
+  return(
+    <button onClick={props.handleClick}>
+      {props.text}
+    </button>
   )
 }
 
@@ -22,15 +38,15 @@ const App=()=>{
   return(
     <div>
       <h1>Give Feedback</h1>
-      <button onClick={()=>setGood(good+1)}>
-        good
-      </button>
-      <button onClick={()=>setNeutral(neutral+1)}>
-        neutral
-      </button>
-      <button onClick={()=>setBad(bad+1)}>
-        bad
-      </button>
+      <Button handleClick={()=>setGood(good+1)}
+        text="good"
+      />
+      <Button handleClick={()=>setNeutral(neutral+1)}
+        text="neutral"
+      />
+      <Button handleClick={()=>setBad(bad+1)}
+        text="bad"
+      />
 
       <h2>Statistics</h2>
       {good==0 && neutral==0 && bad==0 ?(
