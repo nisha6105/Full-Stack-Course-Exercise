@@ -1,34 +1,76 @@
 import { useState } from 'react'
 
+const Button = (props) => {
+  return (
+    <button onClick={props.handleClick}>
+      {props.text}
+    </button>
+  )
+}
+
+const StatisticLine = (props) => {
+  return (
+    <p>
+      {props.text} {props.value}
+    </p>
+  )
+}
+
+const Statistics = (props) => {
+  return (
+    <div>
+      <StatisticLine text="all" value={props.total} />
+      <StatisticLine text="average" value={props.average} />
+      <StatisticLine text="positive" value={props.positive + ' %'} />
+    </div>
+  )
+}
+
 const App = () => {
-  const [names, setNames] = useState([])
-  const [newName, setNewName] = useState('')
+  const [good, setGood] = useState(0)
+  const [neutral, setNeutral] = useState(0)
+  const [bad, setBad] = useState(0)
 
-  const handleSubmit = (event) => {
-    event.preventDefault()
-
-    setNames([...names, newName])
-    setNewName('')
-  }
+  const total = good + neutral + bad
+  const average = (good - bad) / total
+  const positive = (good / total) * 100
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
-        <input
-          value={newName}
-          onChange={(event) => setNewName(event.target.value)}
-        />
+      <h1>Give Feedback</h1>
 
-        <button type="submit">
-          add
-        </button>
-      </form>
+      <Button
+        handleClick={() => setGood(good + 1)}
+        text="good"
+      />
 
-      <ul>
-        {names.map(name => (
-          <li key={name}>{name}</li>
-        ))}
-      </ul>
+      <Button
+        handleClick={() => setNeutral(neutral + 1)}
+        text="neutral"
+      />
+
+      <Button
+        handleClick={() => setBad(bad + 1)}
+        text="bad"
+      />
+
+      <h2>Statistics</h2>
+
+      {good === 0 && neutral === 0 && bad === 0 ? (
+        <p>No feedback given</p>
+      ) : (
+        <>
+          <p>good {good}</p>
+          <p>neutral {neutral}</p>
+          <p>bad {bad}</p>
+
+          <Statistics
+            total={total}
+            average={average}
+            positive={positive}
+          />
+        </>
+      )}
     </div>
   )
 }
