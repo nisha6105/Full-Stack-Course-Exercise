@@ -9,6 +9,40 @@ const anecdotes = [
   'There are only two hard things in Computer Science: cache invalidation and naming things.'
 ]
 
+const Button = (props) => {
+  return (
+    <button onClick={props.onClick}>
+      {props.text}
+    </button>
+  )
+}
+
+const Anecdote = (props) => {
+  return (
+    <div>
+      <p>{props.anecdote}</p>
+      <p>has {props.votes} votes</p>
+    </div>
+  )
+}
+
+const MostVotes = (props) => {
+  return (
+    <div>
+      <h1>Anecdote with most votes</h1>
+
+      {props.maxVotes === 0 ? (
+        <p>No votes yet</p>
+      ) : (
+        <>
+          <p>{props.anecdote}</p>
+          <p>has {props.maxVotes} votes</p>
+        </>
+      )}
+    </div>
+  )
+}
+
 const App=()=>{
   const [selected,setSelected]=useState(0)
   const[votes,setVotes]=useState(new Array(anecdotes.length).fill(0))
@@ -24,17 +58,29 @@ const App=()=>{
 
   return(
     <div>
-      <p>{anecdotes[selected]}</p>
-      <p>has {votes[selected]} votes</p>
-       <button onClick={vote}>vote</button>
-      <button onClick={()=>setSelected((selected+1)%anecdotes.length)}>
-        next anecdote
-      </button>
-      <h1>Anecdote with max votes </h1>
-      <p>
-        {anecdotes[maxIndex]}
-      </p>
-      <p>has {maxVotes} votes</p>
+      <h1>Anecdote of the day</h1>
+
+      <Anecdote
+        anecdote={anecdotes[selected]}
+        votes={votes[selected]}
+      />
+
+      <Button
+        onClick={vote}
+        text="vote"
+      />
+
+      <Button
+        onClick={() =>
+          setSelected((selected + 1) % anecdotes.length)
+        }
+        text="next anecdote"
+      />
+
+      <MostVotes
+        anecdote={anecdotes[maxIndex]}
+        maxVotes={maxVotes}
+      />
     </div>
   )
 }
