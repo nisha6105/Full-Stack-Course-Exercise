@@ -1,101 +1,100 @@
-const Header=(props)=>{
-  return(
-    <h1>
-          {props.course}
-    </h1>
-  )
-}
+import { useState, useEffect } from 'react'
+import personService from './services/persons'
+import './App.css'
 
-const Part=(props)=>{
-  return(
-    <p>
-      {props.name} {props.exercises}
-    </p>
-  )
-}
+const App=()=>{
+    const [persons,setPersons]=useState([])
+    const [newName,setNewName]=useState('')
+    const [newNumber,setNewNumber]=useState('')
+    const [filter,setFilter]=useState('')
 
-const Content=(props)=>{
-  return(
-    <div>
-      {props.parts.map(part=>
-        <Part 
-        key={part.id}
-        name={part.name}
-        exercises={part.exercises}
-        />
-      )}
-    </div>
-  )
-}
+    useEffect(()=>{
+      personService.getAll()
+       .then(response=>{
+        setPersons(response.data)
+       })
+      },[])
 
-const Total = (props) => {
-  let total = 0
+      const personsToShow=persons.filter(person=>
+        person.name.toLowerCase().includes(filter.toLowerCase())
+      )
 
-  props.parts.forEach(part => {
-    total += part.exercises
-  })
+      const addPerson=(event)=>{
+        event.preventDefault()
 
-  return (
-    <p>Number of exercises {total}</p>
-  )
-}
-
-const App = () => {
-  const courses = [
-    {
-      name: 'Half Stack application development',
-      id: 1,
-      parts: [
-        {
-          name: 'Fundamentals of React',
-          exercises: 10,
-          id: 1
-        },
-        {
-          name: 'Using props to pass data',
-          exercises: 7,
-          id: 2
-        },
-        {
-          name: 'State of a component',
-          exercises: 14,
-          id: 3
-        },
-        {
-          name: 'Redux',
-          exercises: 11,
-          id: 4
+        const personObject={
+          name:newName,
+          number:newNumber,
         }
-      ]
-    }, 
-    {
-      name: 'Node.js',
-      id: 2,
-      parts: [
-        {
-          name: 'Routing',
-          exercises: 3,
-          id: 1
-        },
-        {
-          name: 'Middlewares',
-          exercises: 7,
-          id: 2
+        
+        personService
+          .create(personObject)
+          .then(response=>{
+            setPersons(persons.concat(response.data))
+            setNewName('')
+            setNewNumber('')
+          })
         }
-      ]
-    }
-  ]
 
-  return (
-    <div>
-      {courses.map(course=>(
-      <div key={course.id}>
-        <Header course={course.name}/>
-        <Content parts={course.parts}/>
-        <Total parts={course.parts}/>
-      </div>
-    ))}
-    </div>
-    
-  )
+      const deletePerson=person=>{
+        if(window.confirm(`Delete ${person.name}?`)){
+          personService
+            .deletePerson(person.id)
+            .then(()=>{
+              setPersons(person.filter(p=>p.id!==person.id))
+            })
+        }
+      }
+
+
+      return(
+        <div>
+          <h2>Phonebook</h2>
+
+          <div>
+            Filter show with:
+            <input 
+             value={filter}
+             onChange={event=>setFilter(event.target.value)}
+            />
+          </div>
+
+          <h3>Add a new person</h3>
+
+          <form onSubmit={addPerson}>
+            <div>
+              name:
+              <input 
+              value={newName}
+              onChange={event=>setNewName(event.target.value)}
+              />
+            </div>
+
+            <div>
+              number:
+              <input 
+               value={newNumber}
+               onChange={event=>setNewNumber(event.target.value)}
+              />
+            </div>
+
+            <div>
+              <button type="submit">add</button>
+            </div>
+          </form>
+
+          <h3>Numbers</h3>
+
+          {personsToShow.map(person=>(
+            <p key={person.id}>
+              {person.name} {person.number}
+              <button onClick={()=>deletePerson(person)}>
+                delete
+              </button>
+            </p>
+
+          ))}
+        </div>
+      )
 }
+export default App
