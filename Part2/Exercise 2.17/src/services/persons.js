@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const baseurl='http://localhost:3001/persons'
+const baseurl='https://full-stack-course-exercise.onrender.com/api/persons'
 
 const getAll=()=>{
     const request=axios.get(baseurl)
