@@ -16,4 +16,7 @@ https://full-stack-course-exercise.onrender.com/api/persons
 
 - View phonebook contacts
 - Add new contacts
-- Delete contacts (if implemented in the current version)
+
+- **Exercise 3.21 – Deployed Phonebook App:** https://full-stack-phonebook-backend-rzum.onrender.com/
+
+
